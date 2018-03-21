@@ -3,7 +3,7 @@ from data import articles_dstore
 from flaskext.mysql import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from wtforms.validators import DataRequired
-# from flask_mysqldb import MySQL
+from pymysql.cursors import DictCursor
 from passlib.hash import sha256_crypt
 import os
 
@@ -14,12 +14,10 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'ESTD1759'
 app.config['MYSQL_DATABASE_DB'] = 'myflask'
-app.config['MYSQL_DATABASE_CURSORCLASS'] = 'Dictcursor'
 
 # init mysql
-
-mysql = MySQL(app)
-
+mysql = MySQL(cursorclass=DictCursor)
+mysql.init_app(app)
 
 article = articles_dstore()
 
@@ -71,9 +69,47 @@ def register():
         # close cursor
         cur.close()
 
-        flash('Bravo,  You are a registered user')
+        flash('Bravo,  You are a registered user', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # get Form fields
+        username = request.form['username']
+        passwordLogin = request.form['password']
+
+        # cursor
+        cur = mysql.get_db().cursor()
+        # get username
+        result = cur.execute("SELECT * FROM users WHERE username = %s", [username])
+        if result > 0:
+            # get stored hash
+            data = cur.fetchone()
+            print (data)
+            password = data['password']
+            # compare password
+            if sha256_crypt.verify(passwordLogin, password):
+                # when passwords match
+                session['logged_in'] = True
+                session['username'] = username
+                flash('You are now logged in', 'success')
+                return redirect(url_for('dashboard'))
+            else:
+                error = 'Invalid Password'
+                return render_template('login.html', error=error)
+            cur.close()
+        else:
+            error = 'User not found'
+            return render_template('login.html', error=error)
+    return render_template('login.html')
+
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 
 if __name__ == '__main__':
