@@ -7,7 +7,11 @@
   </head>
   <body>
     {% include 'partials/_navbar.html'%}
-    {% block body %}{% endblock %}
+    <div class="container">
+      {% include 'partials/_jumbotron.html' %}
+      {% block body %}{% endblock %}
+    </div>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js">
 
     </script>

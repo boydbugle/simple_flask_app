@@ -1,8 +1,20 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
 from data import articles_dstore
-# from wtforms import Form, StringField, TextAreaField, PasswordField, validators
+from flaskext.mysql import MySQL
+from wtforms import Form, StringField, TextAreaField, PasswordField, validators
+from wtforms.validators import DataRequired
 # from flask_mysqldb import MySQL
+from passlib.hash import sha256_crypt
+
 app = Flask(__name__)
+
+# config mysql
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'ESTD1759'
+app.config['MYSQL_DB'] = 'myflask'
+app.config['MYSQL_CURSORCLASS'] = 'Dictcursor'
+
 
 article = articles_dstore()
 
@@ -26,9 +38,23 @@ def article(article_id):
     return render_template('article.html', article_id=article_id)
 
 
-@app.route('/register')
+class RegisterForm(Form):
+    username = StringField('Name', [validators.Length(min=1, max=10)])
+    email = StringField('Email', [validators.Length(min=6, max=50)])
+    password = PasswordField('Password', [validators.DataRequired(),
+                                          validators.EqualTo(
+                                          'confirm',
+                                          message='Passwords do not match')
+                                          ])
+    confirm = PasswordField('Confirm Password')
+
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        pass
+    return render_template('register.html', form=form)
 
 
 if __name__ == '__main__':
