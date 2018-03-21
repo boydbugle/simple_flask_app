@@ -2,7 +2,8 @@
 
 {% block body %}
 <h1>Register with libraTech</h1>
-<form class="" action="index.html" method="POST">
+{% from "partials/_formhelpers.html" import render_field %}
+<form class="" action="" method="POST">
   <div class="form-group">
     {{render_field(form.name, class-"form-control")}}
   </div>
@@ -18,7 +19,7 @@
   <div class="form-group">
     {{render_field(form.confirm, class-"form-control")}}
   </div>
-
+  <p><input type="submit" class="btn btn-primary" value="submit"></p>
 </form>
 
 {% endblock %}

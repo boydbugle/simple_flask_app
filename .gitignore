@@ -1,0 +1,7 @@
+Pipfile*
+Flask_WTF.egg-info
+dist
+build
+*.pyc
+.idea
+sampleflask

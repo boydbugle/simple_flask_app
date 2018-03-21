@@ -1,4 +1,3 @@
-
 {% extends 'layout.html'%}
 
 {% block body %}
@@ -10,7 +9,7 @@
                 <li><a href="articles/{{article.id}}">{{article.author}}</a></li>
                 <li>{{article.title}}</li>
           {% else %}
-              <p>no aticles available</p>
+              <p>no articles available</p>
           {% endif %}
       {% endfor %}
     </ul>
