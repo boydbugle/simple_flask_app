@@ -2,15 +2,14 @@
 
 {% block body %}
     <h1>all my articles</h1>
-    <ul>
-      {% for article in articles %}
-          {% if article %}
-                <li>{{article.id}}</li>
-                <li><a href="articles/{{article.id}}">{{article.author}}</a></li>
-                <li>{{article.title}}</li>
-          {% else %}
-              <p>no articles available</p>
-          {% endif %}
-      {% endfor %}
-    </ul>
+    {% for article in articles %}
+        {% if article %}
+              <p><a href="article/{{article.id}}">{{article.title}}</a></p>
+              <ul>
+                <li>article by:<br>{{article.author}}</li>
+              </ul>
+        {% else %}
+            <p>no articles available</p>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

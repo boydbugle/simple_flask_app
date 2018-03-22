@@ -1,11 +1,5 @@
 {% extends 'layout.html'%}
 
 {% block body %}
-
-{% if name %}
-    <marquee>hello, {{ name }}</marquee>
-{% else %}
-    <h1>hello you</h1>
-{% endif %}
-
+  {% include 'partials/_jumbotron.html' %}
 {% endblock %}

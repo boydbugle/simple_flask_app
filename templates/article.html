@@ -1,7 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-
-<h3>{{article_id}}</h3>
-<p>{{article_id.author}}</p> <-- smn wrong about this -->
+  <h2>{{article.title}} </h2>
+  <small> Written by: {{article.author}} on {{article.create_date}} </small>
+  <div class="">
+    <p>{{ article.body }}</p>
+  </div>
 {% endblock %}
