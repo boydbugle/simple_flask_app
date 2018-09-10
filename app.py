@@ -1,12 +1,12 @@
+import os
 from functools import wraps
-from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
-# from data import articles_dstore
+from flask import Flask, render_template, request
+from flask import flash, redirect, url_for, session, logging
 from flaskext.mysql import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from wtforms.validators import DataRequired
 from pymysql.cursors import DictCursor
 from passlib.hash import sha256_crypt
-import os
 
 app = Flask(__name__)
 
@@ -94,7 +94,8 @@ def login():
         # cursor
         cur = mysql.get_db().cursor()
         # get username
-        result = cur.execute("SELECT * FROM users WHERE username = %s", (username))
+        result = cur.execute(
+            "SELECT * FROM users WHERE username = %s", (username))
         if result > 0:
             # get stored hash
             data = cur.fetchone()
@@ -187,7 +188,8 @@ def edit_article(id):
     if request.method == 'POST' and form.validate():
         title = request.form['title']
         body = request.form['body']
-        cur.execute("UPDATE articles SET title= %s, body= %s WHERE id= %s", (title, body, id))
+        cur.execute(
+            "UPDATE articles SET title= %s, body= %s WHERE id= %s", (title, body, id))
         mysql.get_db().commit()
         flash('Article Updated', 'success')
         return redirect(url_for('dashboard'))
